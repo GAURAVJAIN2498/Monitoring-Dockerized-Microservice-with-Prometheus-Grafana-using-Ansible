@@ -1,0 +1,17 @@
+- name: Copy Prometheus
+  copy:
+    src: "/root/ansible/prometheus"
+    dest: /home/ubuntu/prometheus
+
+- name: Build Prometheus image
+  command: docker build -t custom-prometheus /root/ansible/prometheus
+  args:
+    chdir: /home/ubuntu/prometheus
+
+- name: Run Prometheus container
+  docker_container:
+    name: prometheus
+    image: custom-prometheus
+    ports:
+      - "9090:9090"
+    restart_policy: always
